@@ -1,5 +1,7 @@
 {
     "python.analysis.extraPaths": [
-        "./third_party"
+        "./third_party",
+        "./tools_for_agent",
+        "./agents/tools_for_agent"
     ]
 }

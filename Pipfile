@@ -8,6 +8,9 @@ langchain = "*"
 langchain-google-genai = "*"
 black = "*"
 python-dotenv = "*"
+tavily-python = "*"
+langchain-community = "*"
+google-search-results = "*"
 
 [dev-packages]
 

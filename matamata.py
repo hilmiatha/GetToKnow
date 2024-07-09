@@ -31,7 +31,7 @@ if __name__ == "__main__":
         safety_settings={
             HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE,
         },
-        temperature=0.2,
+        temperature=0.1,
     )
 
     # creating a chain
