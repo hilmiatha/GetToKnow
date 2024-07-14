@@ -7,7 +7,7 @@ load_dotenv()
 
 def get_profile_url_serpapi(name:str):
     """
-    Search for linkedin or twitter profile page
+    Search for linkedin profile page
     """
     params = {
         'gl' : 'id'

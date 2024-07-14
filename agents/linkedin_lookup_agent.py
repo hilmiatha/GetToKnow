@@ -12,7 +12,7 @@ from langchain.prompts import PromptTemplate
 from langchain_core.tools import Tool
 from langchain import hub
 
-from tools_for_agent.tools_search import get_profile_url_serpapi
+from agents.tools_for_agent.tools_search import get_profile_url_serpapi
 
 load_dotenv()
 
@@ -59,7 +59,7 @@ def lookup(name:str) -> str:
     )
     
     result = agent_executor.invoke(
-        input={'input':template.format_prompt(name=name)},
+        input={'input':prompt.format(name=name)},
         )
     
     linkedin_url = result['output']

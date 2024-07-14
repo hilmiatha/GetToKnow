@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>GetToKnow</title>
+        <link rel="stylesheet" href="https://unpkg.com/mvp.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@chgibb/css-spinners@2.2.1/css/spinner/three-quarters.min.css">
+    </head>
+    <body>
+        <header>
+            <form id="name-form" style="margin: 0 auto">
+                <h1>GetToKnow</h1>
+                <input type="text" name="name" placeholder="Enter name">
+                <button id="magic-button" type="submit" class="center">Cari Orangnya!</button>
+            </form>
+        </header>
+        <div id="spinner" style="text-align: center; display: none">
+            <span class="three-quarters-loader" style="width: 100px; height: 100px; border-radius: 50%; border-width: 12px;"></span>
+        </div>
+        <main id="result" style="display: none">
+            <div style="text-align: center">
+                <img id="profile-pic" src="" alt="Profile Picture" style="width: 300px; max-width: 100%; height: auto; border-radius: 50%; margin-bottom: 20px;">
+            </div>
+            <div>
+                <h2>Ringkasan diri</h2>
+                <p id="summary"></p>
+            </div>
+            <div>
+                <h2>Fakta Menarik</h2>
+                <div id="facts"></div>
+            </div>
+            <div>
+                <h2>Cara memulai interaksi</h2>
+                <div id="ice-breakers"></div>
+            </div>
+        
+        </main>
+
+        <script>
+            const form = document.getElementById("name-form");
+            const spinner = document.getElementById("spinner");
+            const result = document.getElementById("result");
+
+            form.addEventListener("submit", (ev) => {
+                ev.preventDefault();
+
+                result.style.display = "none";
+                spinner.style.display = "";
+
+                const formData = new FormData(form);
+
+                // Log the form data to check if it's correct
+                for (let [key, value] of formData.entries()) {
+                    console.log(`${key}: ${value}`);
+                }
+
+                fetch("/process", { method: "POST", body: formData })
+                    .then(response => {
+                        if (response.ok) return response.json();
+                        throw new Error("POST request failed");
+                    })
+                    .then(data => {
+                        console.log(data);  // Log the received data to check if it's correct
+                        document.getElementById("profile-pic").src = data.picture_url;
+                        document.getElementById("summary").textContent = data.summary.short_summary;
+                        createHtmlList(document.getElementById("facts"), data.summary.fun_facts);
+                        createHtmlList(document.getElementById("ice-breakers"), data.summary.approach_points);
+                        spinner.style.display = "none";
+                        result.style.display = "";
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        spinner.style.display = "none";
+                        result.style.display = "none";
+                    });
+            });
+
+
+            function createHtmlList(element, items)
+            {
+                const ul = document.createElement("ul");
+
+                items.forEach(item => {
+                    const li = document.createElement("li");
+                    li.textContent = item;
+                    ul.appendChild(li);
+                })
+
+                element.innerHTML = "";
+                element.appendChild(ul);
+            }
+        </script>
+    </body>
+</html>

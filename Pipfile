@@ -11,6 +11,9 @@ python-dotenv = "*"
 tavily-python = "*"
 langchain-community = "*"
 google-search-results = "*"
+langchainhub = "*"
+tweepy = "*"
+flask = "*"
 
 [dev-packages]
 
