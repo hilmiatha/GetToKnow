@@ -1,6 +1,6 @@
 # GetToKnow
 
-GetToKnow is a web application that provides LinkedIn profile information based on a user's name. This guide will help you set up and run the project locally.
+GetToKnow is an AI-based web application that provides LinkedIn profile information based on a user's name. It uses the `LangChain` library for processing and integrating AI capabilities. This guide will help you set up and run the project locally. It also uses services like Google Custom Search, SerpApi, and Proxycurl to fetch LinkedIn profile information.
 
 ## Project Structure
 
