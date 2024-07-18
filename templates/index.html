@@ -1,94 +1,174 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>GetToKnow</title>
-        <link rel="stylesheet" href="https://unpkg.com/mvp.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@chgibb/css-spinners@2.2.1/css/spinner/three-quarters.min.css">
-    </head>
-    <body>
-        <header>
-            <form id="name-form" style="margin: 0 auto">
-                <h1>GetToKnow</h1>
-                <input type="text" name="name" placeholder="Enter name">
-                <button id="magic-button" type="submit" class="center">Cari Orangnya!</button>
-            </form>
-        </header>
-        <div id="spinner" style="text-align: center; display: none">
-            <span class="three-quarters-loader" style="width: 100px; height: 100px; border-radius: 50%; border-width: 12px;"></span>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GetToKnow</title>
+    <link rel="stylesheet" href="https://unpkg.com/mvp.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@chgibb/css-spinners@2.2.1/css/spinner/three-quarters.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        form {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100px;
+        }
+        #result {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        #profile-pic {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+        }
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        li {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>GetToKnow</h1>
+        <form id="name-form">
+            <input type="text" name="name" placeholder="Enter name" required>
+            <button id="magic-button" type="submit">Cari Orangnya!</button>
+        </form>
+    </header>
+
+    <div id="spinner" style="display: none">
+        <span class="three-quarters-loader" style="width: 50px; height: 50px; border-width: 6px;"></span>
+    </div>
+
+    <main id="result" style="display: none">
+        <div style="text-align: center">
+            <img id="profile-pic" src="" alt="Profile Picture">
         </div>
-        <main id="result" style="display: none">
-            <div style="text-align: center">
-                <img id="profile-pic" src="" alt="Profile Picture" style="width: 300px; max-width: 100%; height: auto; border-radius: 50%; margin-bottom: 20px;">
-            </div>
-            <div>
-                <h2>Ringkasan diri</h2>
-                <p id="summary"></p>
-            </div>
-            <div>
-                <h2>Fakta Menarik</h2>
-                <div id="facts"></div>
-            </div>
-            <div>
-                <h2>Cara memulai interaksi</h2>
-                <div id="ice-breakers"></div>
-            </div>
-        
-        </main>
+        <div>
+            <h2>Ringkasan diri</h2>
+            <p id="summary"></p>
+        </div>
+        <div>
+            <h2>Fakta Menarik</h2>
+            <div id="facts"></div>
+        </div>
+        <div>
+            <h2>Cara memulai interaksi</h2>
+            <div id="ice-breakers"></div>
+        </div>
+    </main>
 
-        <script>
-            const form = document.getElementById("name-form");
-            const spinner = document.getElementById("spinner");
-            const result = document.getElementById("result");
+    <script>
+        const form = document.getElementById("name-form");
+        const spinner = document.getElementById("spinner");
+        const result = document.getElementById("result");
 
-            form.addEventListener("submit", (ev) => {
-                ev.preventDefault();
+        form.addEventListener("submit", (ev) => {
+            ev.preventDefault();
 
-                result.style.display = "none";
-                spinner.style.display = "";
+            result.style.display = "none";
+            spinner.style.display = "";
 
-                const formData = new FormData(form);
+            const formData = new FormData(form);
 
-                // Log the form data to check if it's correct
-                for (let [key, value] of formData.entries()) {
-                    console.log(`${key}: ${value}`);
-                }
-
-                fetch("/process", { method: "POST", body: formData })
-                    .then(response => {
-                        if (response.ok) return response.json();
-                        throw new Error("POST request failed");
-                    })
-                    .then(data => {
-                        console.log(data);  // Log the received data to check if it's correct
-                        document.getElementById("profile-pic").src = data.picture_url;
-                        document.getElementById("summary").textContent = data.summary.short_summary;
-                        createHtmlList(document.getElementById("facts"), data.summary.fun_facts);
-                        createHtmlList(document.getElementById("ice-breakers"), data.summary.approach_points);
-                        spinner.style.display = "none";
-                        result.style.display = "";
-                    })
-                    .catch(error => {
-                        console.error(error);
-                        spinner.style.display = "none";
-                        result.style.display = "none";
-                    });
-            });
-
-
-            function createHtmlList(element, items)
-            {
-                const ul = document.createElement("ul");
-
-                items.forEach(item => {
-                    const li = document.createElement("li");
-                    li.textContent = item;
-                    ul.appendChild(li);
-                })
-
-                element.innerHTML = "";
-                element.appendChild(ul);
+            // Log the form data to check if it's correct
+            for (let [key, value] of formData.entries()) {
+                console.log(`${key}: ${value}`);
             }
-        </script>
-    </body>
+
+            fetch("/process", { method: "POST", body: formData })
+                .then(response => {
+                    if (response.ok) return response.json();
+                    throw new Error("POST request failed");
+                })
+                .then(data => {
+                    console.log(data);  // Log the received data to check if it's correct
+                    document.getElementById("profile-pic").src = data.picture_url;
+                    document.getElementById("summary").textContent = data.summary.short_summary;
+                    createHtmlList(document.getElementById("facts"), data.summary.fun_facts);
+                    createHtmlList(document.getElementById("ice-breakers"), data.summary.approach_points);
+                    spinner.style.display = "none";
+                    result.style.display = "";
+                })
+                .catch(error => {
+                    console.error(error);
+                    spinner.style.display = "none";
+                    result.style.display = "none";
+                });
+        });
+
+
+        function createHtmlList(element, items)
+        {
+            const ul = document.createElement("ul");
+
+            items.forEach(item => {
+                const li = document.createElement("li");
+                li.textContent = item;
+                ul.appendChild(li);
+            })
+
+            element.innerHTML = "";
+            element.appendChild(ul);
+        }
+    </script>
+</body>
 </html>

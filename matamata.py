@@ -13,7 +13,7 @@ from output_parser import summary_parser, summary
 load_dotenv()
 def cari_linkedin(name:str) -> tuple[summary, str]:
     linkedin_link = lookup(name=name)
-    data = scrape_linkedin_profile(linkedin_link, mock=True)
+    data = scrape_linkedin_profile(linkedin_link, mock=False)
     
     # create a prompt template
     summary_template = """
